@@ -1,3 +1,37 @@
+-- Key System Example
+local validKey = "Crownyscript_78129361823561823as7dh3uu1236-312yas603-587adh" -- Replace with your desired key
+
+-- Create a GUI for key input
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextBox = Instance.new("TextBox")
+local SubmitButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+Frame.Parent = ScreenGui
+Frame.Size = UDim2.new(0, 300, 0, 150)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+
+TextBox.Parent = Frame
+TextBox.Size = UDim2.new(0, 200, 0, 50)
+TextBox.Position = UDim2.new(0.5, -100, 0.3, -25)
+TextBox.PlaceholderText = "Enter Key"
+
+SubmitButton.Parent = Frame
+SubmitButton.Size = UDim2.new(0, 100, 0, 50)
+SubmitButton.Position = UDim2.new(0.5, -50, 0.7, -25)
+SubmitButton.Text = "Submit"
+
+-- Validate the key
+SubmitButton.MouseButton1Click:Connect(function()
+if TextBox.Text == validKey then
+print("Access Granted!")
+-- Add functionality for authorized users here
+else
+print("Invalid Key!")
+end
+end)
+
 -- Destroy existing GUI if re-run
 pcall(function() game.CoreGui:FindFirstChild("CrownyGUI"):Destroy() end)
 
