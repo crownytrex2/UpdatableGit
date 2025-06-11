@@ -1,3 +1,4 @@
+
 -- Destroy existing GUI if re-run
 pcall(function() game.CoreGui:FindFirstChild("CrownyGUI"):Destroy() end)
 
