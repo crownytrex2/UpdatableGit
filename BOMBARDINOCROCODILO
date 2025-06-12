@@ -1,0 +1,226 @@
+-- Destroy existing GUI if re-run
+pcall(function() game.CoreGui:FindFirstChild("CrownyGUI"):Destroy() end)
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+
+local correctKey = "BOMBARDINOCROCODILO"
+
+-- GUI
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "CrownyGUI"
+gui.ResetOnSpawn = false
+
+-- Key Frame
+local keyFrame = Instance.new("Frame", gui)
+keyFrame.Size = UDim2.new(0, 300, 0, 150)
+keyFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+keyFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+keyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+keyFrame.BackgroundTransparency = 0
+local keyCorner = Instance.new("UICorner", keyFrame)
+keyCorner.CornerRadius = UDim.new(0, 10)
+
+local keyTitle = Instance.new("TextLabel", keyFrame)
+keyTitle.Size = UDim2.new(1, 0, 0, 30)
+keyTitle.Position = UDim2.new(0, 0, 0, 10)
+keyTitle.BackgroundTransparency = 1
+keyTitle.Text = "Enter Access Key"
+keyTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyTitle.Font = Enum.Font.GothamBold
+keyTitle.TextSize = 16
+
+local keyBox = Instance.new("TextBox", keyFrame)
+keyBox.Size = UDim2.new(0.8, 0, 0, 30)
+keyBox.Position = UDim2.new(0.1, 0, 0.4, 0)
+keyBox.PlaceholderText = "Enter Key Here"
+keyBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyBox.Font = Enum.Font.Gotham
+keyBox.TextSize = 14
+local boxCorner = Instance.new("UICorner", keyBox)
+boxCorner.CornerRadius = UDim.new(0, 6)
+
+local submitBtn = Instance.new("TextButton", keyFrame)
+submitBtn.Size = UDim2.new(0.5, 0, 0, 30)
+submitBtn.Position = UDim2.new(0.25, 0, 0.7, 0)
+submitBtn.Text = "Submit"
+submitBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+submitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+submitBtn.Font = Enum.Font.Gotham
+submitBtn.TextSize = 14
+local submitCorner = Instance.new("UICorner", submitBtn)
+submitCorner.CornerRadius = UDim.new(0, 5)
+
+-- Main GUI Frame (starts invisible)
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 200)
+frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BackgroundTransparency = 0.1
+frame.Visible = false
+frame.Parent = gui
+local corner = Instance.new("UICorner", frame)
+corner.CornerRadius = UDim.new(0, 10)
+
+-- Title (Drag Handle)
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Text = "CROWNYTREX GUI"
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+
+-- Drag Logic
+local dragging, dragInput, dragStart, startPos
+title.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+title.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+
+-- Minimize Button
+local minimizeBtn = Instance.new("TextButton", frame)
+minimizeBtn.Size = UDim2.new(0, 80, 0, 25)
+minimizeBtn.Position = UDim2.new(1, -85, 0, 5)
+minimizeBtn.Text = "Minimize"
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+minimizeBtn.Font = Enum.Font.Gotham
+minimizeBtn.TextSize = 14
+local minCorner = Instance.new("UICorner", minimizeBtn)
+minCorner.CornerRadius = UDim.new(0, 5)
+
+-- Transparency Button
+local slider = Instance.new("TextButton", frame)
+slider.Position = UDim2.new(0.05, 0, 0.4, 0)
+slider.Size = UDim2.new(0.9, 0, 0, 30)
+slider.Text = "Transparency: 10%"
+slider.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+slider.TextColor3 = Color3.fromRGB(255, 255, 255)
+slider.Font = Enum.Font.Gotham
+slider.TextSize = 14
+local sliderCorner = Instance.new("UICorner", slider)
+sliderCorner.CornerRadius = UDim.new(0, 5)
+
+-- Fly Button
+local flyButton = Instance.new("TextButton", frame)
+flyButton.Position = UDim2.new(0.05, 0, 0.65, 0)
+flyButton.Size = UDim2.new(0.9, 0, 0, 30)
+flyButton.Text = "Toggle Fly"
+flyButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+flyButton.Font = Enum.Font.Gotham
+flyButton.TextSize = 14
+local flyCorner = Instance.new("UICorner", flyButton)
+flyCorner.CornerRadius = UDim.new(0, 5)
+
+-- Toggle GUI elements
+local contentElements = {slider, flyButton}
+local isMinimized = false
+minimizeBtn.MouseButton1Click:Connect(function()
+	isMinimized = not isMinimized
+	for _, element in ipairs(contentElements) do
+		if element and element:IsA("GuiObject") then
+			element.Visible = not isMinimized
+		end
+	end
+end)
+
+-- Transparency Logic
+slider.MouseButton1Click:Connect(function()
+	frame.BackgroundTransparency = frame.BackgroundTransparency + 0.1
+	if frame.BackgroundTransparency > 1 then
+		frame.BackgroundTransparency = 0
+	end
+	local percent = math.floor((1 - frame.BackgroundTransparency) * 100)
+	slider.Text = "Transparency: " .. percent .. "%"
+end)
+
+-- Fly Script
+local flying = false
+local flySpeed = 80
+local flyBV, flyConn
+
+local function toggleFly()
+	local char = player.Character or player.CharacterAdded:Wait()
+	local root = char:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	if flying then
+		flying = false
+		if flyBV then flyBV:Destroy() end
+		if flyConn then flyConn:Disconnect() end
+	else
+		flying = true
+		flyBV = Instance.new("BodyVelocity")
+		flyBV.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+		flyBV.Velocity = Vector3.zero
+		flyBV.Parent = root
+
+		flyConn = RunService.RenderStepped:Connect(function()
+			local dir = Vector3.zero
+			if UserInputService:IsKeyDown(Enum.KeyCode.W) then dir += workspace.CurrentCamera.CFrame.LookVector end
+			if UserInputService:IsKeyDown(Enum.KeyCode.S) then dir -= workspace.CurrentCamera.CFrame.LookVector end
+			if UserInputService:IsKeyDown(Enum.KeyCode.A) then dir -= workspace.CurrentCamera.CFrame.RightVector end
+			if UserInputService:IsKeyDown(Enum.KeyCode.D) then dir += workspace.CurrentCamera.CFrame.RightVector end
+			if UserInputService:IsKeyDown(Enum.KeyCode.Space) then dir += Vector3.yAxis end
+			if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then dir -= Vector3.yAxis end
+			if dir.Magnitude > 0 then
+				flyBV.Velocity = dir.Unit * flySpeed
+			else
+				flyBV.Velocity = Vector3.zero
+			end
+		end)
+	end
+end
+
+flyButton.MouseButton1Click:Connect(toggleFly)
+
+-- Permanent Watermark
+local note = Instance.new("TextLabel", gui)
+note.Size = UDim2.new(0, 300, 0, 30)
+note.Position = UDim2.new(1, -310, 1, -40)
+note.BackgroundTransparency = 0.2
+note.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+note.Text = "MADE BY CROWNYTREX ON DISCORD"
+note.TextColor3 = Color3.fromRGB(255, 255, 255)
+note.Font = Enum.Font.GothamBold
+note.TextSize = 14
+local noteCorner = Instance.new("UICorner", note)
+noteCorner.CornerRadius = UDim.new(0, 6)
+
+-- Key Check
+submitBtn.MouseButton1Click:Connect(function()
+	if keyBox.Text == correctKey then
+		keyFrame:Destroy()
+		frame.Visible = true
+	else
+		keyTitle.Text = "Incorrect Key!"
+		keyTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
+	end
+end)
