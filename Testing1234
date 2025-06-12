@@ -1,0 +1,132 @@
+--// Speed GUI - By crownytrex
+
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+local KEY = "WENEEDSPEED"
+
+-- GUI Setup
+local gui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+gui.Name = "SpeedGUI"
+gui.ResetOnSpawn = false
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 320, 0, 180)
+frame.Position = UDim2.new(0.5, -160, 0.5, -90)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BackgroundTransparency = 0.3
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
+
+-- Custom Dragging
+local dragging, dragInput, dragStart, startPos
+
+frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+frame.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+
+-- Label (Always Visible)
+local label = Instance.new("TextLabel", frame)
+label.Text = "crownytrex's speed"
+label.Font = Enum.Font.GothamBold
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.BackgroundTransparency = 1
+label.Size = UDim2.new(1, 0, 0, 40)
+label.Position = UDim2.new(0, 0, 0, 0)
+label.TextScaled = true
+
+-- Key Input UI
+local keyBox = Instance.new("TextBox", frame)
+keyBox.PlaceholderText = "Enter Key"
+keyBox.Text = ""
+keyBox.Size = UDim2.new(0.8, 0, 0, 30)
+keyBox.Position = UDim2.new(0.1, 0, 0, 60)
+keyBox.Font = Enum.Font.Gotham
+keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Instance.new("UICorner", keyBox).CornerRadius = UDim.new(0, 6)
+
+local confirmButton = Instance.new("TextButton", frame)
+confirmButton.Text = "Submit"
+confirmButton.Size = UDim2.new(0.5, 0, 0, 30)
+confirmButton.Position = UDim2.new(0.25, 0, 0, 100)
+confirmButton.Font = Enum.Font.GothamBold
+confirmButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+confirmButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+Instance.new("UICorner", confirmButton).CornerRadius = UDim.new(0, 6)
+
+-- Speed UI (Initially Hidden)
+local speedBox = Instance.new("TextBox")
+speedBox.PlaceholderText = "Enter Speed"
+speedBox.Size = UDim2.new(0.6, 0, 0, 30)
+speedBox.Position = UDim2.new(0.1, 0, 0, 100)
+speedBox.Font = Enum.Font.Gotham
+speedBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Instance.new("UICorner", speedBox).CornerRadius = UDim.new(0, 6)
+speedBox.Visible = false
+speedBox.Parent = frame
+
+local button = Instance.new("TextButton")
+button.Text = "Toggle"
+button.Size = UDim2.new(0.25, 0, 0, 30)
+button.Position = UDim2.new(0.75, 10, 0, 100)
+button.Font = Enum.Font.GothamBold
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+Instance.new("UICorner", button).CornerRadius = UDim.new(0, 6)
+button.Visible = false
+button.Parent = frame
+
+-- Unlock Speed Controls
+confirmButton.MouseButton1Click:Connect(function()
+	if keyBox.Text == KEY then
+		keyBox:Destroy()
+		confirmButton:Destroy()
+		speedBox.Visible = true
+		button.Visible = true
+	else
+		keyBox.Text = "Invalid Key"
+	end
+end)
+
+-- Toggle Speed
+local speedEnabled = false
+button.MouseButton1Click:Connect(function()
+	local speed = tonumber(speedBox.Text)
+	if speed then
+		speedEnabled = not speedEnabled
+		if speedEnabled then
+			hum.WalkSpeed = speed
+			button.Text = "ON"
+			button.BackgroundColor3 = Color3.fromRGB(60, 180, 75)
+		else
+			hum.WalkSpeed = 16
+			button.Text = "OFF"
+			button.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+		end
+	else
+		speedBox.Text = "Invalid Number"
+	end
+end)
