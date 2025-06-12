@@ -2,9 +2,11 @@
 
 `loadstring(game:HttpGet("https://raw.githubusercontent.com/crownytrex2/UpdatableGit/refs/heads/main/funnys"))()`
 `loadstring(game:HttpGet("https://raw.githubusercontent.com/crownytrex2/UpdatableGit/refs/heads/main/BOMBARDINOCROCODILO"))()`
+`loadstring(game:HttpGet("https://raw.githubusercontent.com/crownytrex2/UpdatableGit/refs/heads/main/Testing12345"))()`
 
 ## KEY FOR FUNNYS IS `CROWNYTREX`
 ## KEY FOR BOMBARDINOCROCODILO IS `BOMBARDINOCROCODILO`
+## KEY FOR TESTING12345 IS `WENEEDSPEED`
 
 
 ## - *MADE BY CROWNYTREX ON DISCORD*
