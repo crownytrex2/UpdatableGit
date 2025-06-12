@@ -130,3 +130,16 @@ button.MouseButton1Click:Connect(function()
 		speedBox.Text = "Invalid Number"
 	end
 end)
+
+-- Ctrl + Click Teleport
+local UIS = game:GetService("UserInputService")
+local mouse = player:GetMouse()
+
+mouse.Button1Down:Connect(function()
+	if UIS:IsKeyDown(Enum.KeyCode.LeftControl) or UIS:IsKeyDown(Enum.KeyCode.RightControl) then
+		local targetPos = mouse.Hit and mouse.Hit.Position
+		if targetPos and hum and hum.Parent then
+			char:MoveTo(targetPos + Vector3.new(0, 3, 0)) -- slightly above ground
+		end
+	end
+end)
